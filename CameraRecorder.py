@@ -6,18 +6,18 @@ from queue import Queue
 
 import cv2
 
+from Recorder import Recorder
 
-class CameraThread(threading.Thread):
+
+class CameraRecorder(Recorder, threading.Thread):
     """
     Thread that fetches camera's content.
     """
 
     def __init__(self, capture_duration: int):
-        super().__init__()
-        self.capture_duration = capture_duration
+        threading.Thread.__init__(self)
+        Recorder.__init__(self, capture_duration)
         self.logger = logging.getLogger('main.camera')
-        self.queue = deque()
-        self.continue_running = True
 
     def run(self):
         self.logger.debug("Starting camera thread.")
@@ -36,14 +36,4 @@ class CameraThread(threading.Thread):
             self.logger.info(len(self.queue))
         cap.release()
         self.logger.debug("Camera thread stopped")
-
-    def remove_old_frames(self, current_time):
-        if len(self.queue) > 0:
-            continue_popping = True
-            while continue_popping:
-                if current_time - self.queue[0][0] > self.capture_duration:
-                    # remove last frames
-                    self.queue.popleft()
-                else:
-                    continue_popping = False
 
