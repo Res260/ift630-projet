@@ -29,7 +29,7 @@ class App:
 
         os.makedirs('temp', exist_ok=True)
 
-        threading.Timer(6.0, lambda : self.trigger(None, None)).start()
+        threading.Timer(3.0, lambda : self.trigger(None, None)).start()
 
         self.camera_thread.start()
         self.microphone_thread.start()
