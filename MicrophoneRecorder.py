@@ -1,6 +1,7 @@
 import logging
 import threading
 import time
+import wave
 
 import pyaudio as pa
 
@@ -20,11 +21,11 @@ class MicrophoneRecorder(Recorder, threading.Thread):
         self.FORMAT = pa.paInt32
         self.SAMPLE_RATE = 44100
         self.CHANNELS = 1
+        self.pyaudio = pa.PyAudio()
 
     def run(self):
         self.logger.debug("Starting microphone thread.")
-        p = pa.PyAudio()
-        stream = p.open(format=self.FORMAT, channels=self.CHANNELS,
+        stream = self.pyaudio.open(format=self.FORMAT, channels=self.CHANNELS,
                         rate=self.SAMPLE_RATE, input=True,
                         frames_per_buffer=self.CHUNK_SIZE)
         self.logger.debug("Stream opened")
@@ -36,5 +37,22 @@ class MicrophoneRecorder(Recorder, threading.Thread):
             self.queue.append((current_time, samples))
             self.logger.info(len(self.queue))
 
+        stream.stop_stream()
+        stream.close()
+
+        self.write_to_disk()
+
+        self.pyaudio.terminate()
         self.logger.debug("Microphone thread stopped")
 
+    def write_to_disk(self):
+        self.logger.debug("Saving microphone data to disk")
+        frames = self.queue.copy()
+        self.queue.clear()
+        wf = wave.open('temp/microphone_recorder.wav', 'wb')
+        wf.setnchannels(self.CHANNELS)
+        wf.setsampwidth(self.pyaudio.get_sample_size(self.FORMAT))
+        wf.setframerate(self.SAMPLE_RATE)
+        for timestamp, frame in frames:
+            wf.writeframes(frame)
+        wf.close()
