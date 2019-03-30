@@ -2,6 +2,7 @@ import argparse
 import signal
 import logging
 import os
+import threading
 import time
 
 from CameraRecorder import CameraRecorder
@@ -25,6 +26,11 @@ class App:
         self.logger.addHandler(logging.FileHandler('log/shadowCar.log'))
 
     def run(self):
+
+        os.makedirs('temp', exist_ok=True)
+
+        threading.Timer(6.0, lambda : self.trigger(None, None)).start()
+
         self.camera_thread.start()
         self.microphone_thread.start()
         while self.camera_thread.continue_running:

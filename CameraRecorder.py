@@ -35,5 +35,19 @@ class CameraRecorder(Recorder, threading.Thread):
             #     break
             self.logger.info(len(self.queue))
         cap.release()
+        self.write_to_disk()
         self.logger.debug("Camera thread stopped")
+
+    def write_to_disk(self):
+        self.logger.debug("Writing to disk")
+        frames = self.queue.copy()
+        self.queue.clear()
+        average_frames_per_seconds = len(frames) / (frames[len(frames) - 1][0] - frames[0][0])
+        video_dimension = frames[0][1].shape[1], frames[0][1].shape[0]
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter('temp/camera_recorder.avi', fourcc, average_frames_per_seconds, video_dimension)
+        for timestamp, image in frames:
+            out.write(image)
+        out.release()
+        self.logger.debug("Camera video has been written")
 
