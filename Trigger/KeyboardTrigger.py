@@ -1,6 +1,8 @@
 import logging
 import threading
-from pynput.keyboard import Key, Listener
+
+from pynput.keyboard import Listener
+
 from Trigger.Trigger import Trigger
 
 
@@ -23,7 +25,7 @@ class KeyboardTrigger(Trigger, threading.Thread):
 
     def on_press(self, key):
         self.logger.info('{0} pressed, triggering save event'.format(key))
-        self.callback(None, None)
+        self.callback()
 
     def on_release(self, key):
         pass
