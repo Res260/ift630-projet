@@ -44,3 +44,4 @@ class CameraRecorder(Recorder, threading.Thread):
         cap.release()
         self.camera_data.put(self.queue.copy())
         self.logger.debug("Camera thread stopped")
+
