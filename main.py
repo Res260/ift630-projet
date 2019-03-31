@@ -2,15 +2,19 @@ import argparse
 import signal
 import logging
 import os
+import subprocess
 import threading
 import time
 
 from CameraRecorder import CameraRecorder
+from Constants import Constants
 from MicrophoneRecorder import MicrophoneRecorder
 
 
 class App:
     def __init__(self, args: argparse.Namespace):
+        self.SAVE_FOLDER = 'out/'
+        self.TEMP_FOLDER = 'temp/'
         self.args = args
         self.logger = logging.getLogger('main')
         self.prepare_logger()
@@ -27,7 +31,8 @@ class App:
 
     def run(self):
 
-        os.makedirs('temp', exist_ok=True)
+        os.makedirs(self.TEMP_FOLDER, exist_ok=True)
+        os.makedirs(self.SAVE_FOLDER, exist_ok=True)
 
         threading.Timer(3.0, lambda : self.trigger(None, None)).start()
 
@@ -38,6 +43,7 @@ class App:
             time.sleep(1)
         self.camera_thread.join()
         self.microphone_thread.join()
+        self.merge_audio_and_video()
         self.logger.info("Application exited cleanly")
         exit(0)
 
@@ -45,6 +51,16 @@ class App:
         self.logger.info("Triggered")
         self.camera_thread.continue_running = False
         self.microphone_thread.continue_running = False
+
+    def merge_audio_and_video(self):
+        self.logger.debug("Mixing audio and video")
+        subprocess.run('ffmpeg -y -v 0 -i {0} -i {1} -c:v copy '
+               '-c:a aac -strict experimental {2}'
+               .format(Constants.TEMP_FOLDER + Constants.VIDEO_FILE,
+                       Constants.TEMP_FOLDER + Constants.AUDIO_FILE,
+                       Constants.SAVE_FOLDER + f"recording_{time.time()}.avi"))
+        self.logger.debug("Mixing audio and video DONE")
+
 
 
 if __name__ == "__main__":

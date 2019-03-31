@@ -6,6 +6,7 @@ import wave
 import pyaudio as pa
 
 from Recorder import Recorder
+from Constants import Constants
 
 
 class MicrophoneRecorder(Recorder, threading.Thread):
@@ -49,7 +50,7 @@ class MicrophoneRecorder(Recorder, threading.Thread):
         self.logger.debug("Saving microphone data to disk")
         frames = self.queue.copy()
         self.queue.clear()
-        wf = wave.open('temp/microphone_recorder.wav', 'wb')
+        wf = wave.open(f'{Constants.TEMP_FOLDER}{Constants.AUDIO_FILE}', 'wb')
         wf.setnchannels(self.CHANNELS)
         wf.setsampwidth(self.pyaudio.get_sample_size(self.FORMAT))
         wf.setframerate(self.SAMPLE_RATE)

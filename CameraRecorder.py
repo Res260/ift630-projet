@@ -5,6 +5,7 @@ from collections import deque
 from datetime import datetime
 from queue import Queue
 from typing import Tuple, List
+from Constants import Constants
 
 import cv2
 from numpy.core.multiarray import ndarray
@@ -49,7 +50,7 @@ class CameraRecorder(Recorder, threading.Thread):
         self.add_timestamp_to_frames(frames, video_dimension)
         average_frames_per_seconds = len(frames) / (frames[len(frames) - 1][0] - frames[0][0])
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter('temp/camera_recorder.avi', fourcc, average_frames_per_seconds, video_dimension)
+        out = cv2.VideoWriter(f'{Constants.TEMP_FOLDER}{Constants.VIDEO_FILE}', fourcc, average_frames_per_seconds, video_dimension)
         for timestamp, image in frames:
             out.write(image)
         out.release()
