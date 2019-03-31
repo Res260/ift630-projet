@@ -7,6 +7,10 @@ class Recorder:
         self.capture_duration = capture_duration
         self.queue = deque()
         self.continue_running = True
+        self.can_start = False
+        self.ready = False
+
+
 
     def remove_old_frames(self, current_time):
         if len(self.queue) > 0:
@@ -17,3 +21,7 @@ class Recorder:
                     self.queue.popleft()
                 else:
                     continue_popping = False
+
+    def wait_to_start(self):
+        while not self.can_start:
+            pass

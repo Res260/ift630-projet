@@ -31,6 +31,9 @@ class MicrophoneRecorder(Recorder, threading.Thread):
                         frames_per_buffer=self.CHUNK_SIZE)
         self.logger.debug("Stream opened")
 
+        self.ready = True
+        self.wait_to_start()
+
         while self.continue_running:
             samples = stream.read(self.CHUNK_SIZE)
             current_time = time.time()

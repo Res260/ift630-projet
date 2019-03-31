@@ -34,10 +34,15 @@ class App:
         os.makedirs(self.TEMP_FOLDER, exist_ok=True)
         os.makedirs(self.SAVE_FOLDER, exist_ok=True)
 
-        threading.Timer(3.0, lambda : self.trigger(None, None)).start()
+        threading.Timer(5.0, lambda : self.trigger(None, None)).start()
 
         self.camera_thread.start()
         self.microphone_thread.start()
+        while(not self.camera_thread.ready or not self.microphone_thread.ready):
+            pass  # Waiting actively :(
+        self.camera_thread.can_start = True
+        self.microphone_thread.can_start = True
+
         while self.camera_thread.continue_running:
             # This is needed since thread.join() blocks signals... 🙄
             time.sleep(1)

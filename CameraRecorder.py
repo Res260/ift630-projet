@@ -28,6 +28,11 @@ class CameraRecorder(Recorder, threading.Thread):
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             raise IOError("Cannot open webcam")
+        _, frame = cap.read()  # Read a dummy frame so opencv is faster on the subsequent reads (idk why its needed but it is)
+        self.logger.debug("Camera ready")
+        self.ready = True
+        self.wait_to_start()
+
         while self.continue_running:
             pass
             _, frame = cap.read()
