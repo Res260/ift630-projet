@@ -36,8 +36,6 @@ class App:
         os.makedirs(self.TEMP_FOLDER, exist_ok=True)
         os.makedirs(self.SAVE_FOLDER, exist_ok=True)
 
-        threading.Timer(5.0, lambda : self.trigger(None, None)).start()
-
         self.trigger_thread.start()
         self.camera_thread.start()
         self.microphone_thread.start()
