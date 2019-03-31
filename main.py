@@ -9,6 +9,7 @@ import time
 from Recorder.CameraRecorder import CameraRecorder
 from Constants import Constants
 from Recorder.MicrophoneRecorder import MicrophoneRecorder
+from Trigger.KeyboardTrigger import KeyboardTrigger
 
 
 class App:
@@ -20,6 +21,7 @@ class App:
         self.prepare_logger()
         self.camera_thread = CameraRecorder(args.capture_duration)
         self.microphone_thread = MicrophoneRecorder(args.capture_duration)
+        self.trigger_thread = KeyboardTrigger(self.trigger)
 
     def prepare_logger(self):
         self.logger.setLevel(logging.DEBUG)
@@ -36,6 +38,7 @@ class App:
 
         threading.Timer(5.0, lambda : self.trigger(None, None)).start()
 
+        self.trigger_thread.start()
         self.camera_thread.start()
         self.microphone_thread.start()
         while(not self.camera_thread.ready or not self.microphone_thread.ready):

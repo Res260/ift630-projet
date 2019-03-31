@@ -10,7 +10,7 @@ from Constants import Constants
 import cv2
 from numpy.core.multiarray import ndarray
 
-from Recorder import Recorder
+from Recorder.Recorder import Recorder
 
 
 class CameraRecorder(Recorder, threading.Thread):

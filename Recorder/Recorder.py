@@ -10,8 +10,6 @@ class Recorder:
         self.can_start = False
         self.ready = False
 
-
-
     def remove_old_frames(self, current_time):
         if len(self.queue) > 0:
             continue_popping = True

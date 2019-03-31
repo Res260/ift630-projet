@@ -5,7 +5,7 @@ import wave
 
 import pyaudio as pa
 
-from Recorder import Recorder
+from Recorder.Recorder import Recorder
 from Constants import Constants
 
 
