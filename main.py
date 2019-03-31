@@ -6,9 +6,9 @@ import subprocess
 import threading
 import time
 
-from CameraRecorder import CameraRecorder
+from Recorder.CameraRecorder import CameraRecorder
 from Constants import Constants
-from MicrophoneRecorder import MicrophoneRecorder
+from Recorder.MicrophoneRecorder import MicrophoneRecorder
 
 
 class App:
