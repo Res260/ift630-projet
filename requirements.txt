@@ -2,3 +2,4 @@ opencv-python
 pyaudio
 pynput
 obd
+mouse
