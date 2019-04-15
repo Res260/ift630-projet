@@ -11,7 +11,7 @@ from Recorder.CameraRecorder import CameraRecorder
 from Recorder.CarRecorder import CarRecorder
 from Recorder.MicrophoneRecorder import MicrophoneRecorder
 from SaveManager import SaveManager
-from Trigger.KeyboardTrigger import KeyboardTrigger
+from Trigger.MouseClickTrigger import MouseClickTrigger
 
 
 class App:
@@ -27,7 +27,7 @@ class App:
         self.camera_thread = CameraRecorder(args.capture_duration, self.camera_data)
         self.microphone_thread = MicrophoneRecorder(args.capture_duration, self.audio_data)
         self.car_thread = CarRecorder(args.capture_duration, self.car_data)
-        self.trigger_thread = KeyboardTrigger(self.trigger)
+        self.trigger_thread = MouseClickTrigger(self.trigger)
         self.save_trigger = Queue(maxsize=1)
         self.save_thread = SaveManager(self.save_trigger, self.camera_data, self.audio_data, self.car_data)
         self.continue_running = True
