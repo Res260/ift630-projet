@@ -23,9 +23,14 @@ class MicrophoneRecorder(Recorder, threading.Thread):
 
     def run(self):
         self.logger.debug("Starting microphone thread.")
-        stream = self.pyaudio.open(format=Constants.FORMAT, channels=Constants.CHANNELS,
-                        rate=Constants.SAMPLE_RATE, input=True,
-                        frames_per_buffer=Constants.CHUNK_SIZE)
+        try:
+            stream = self.pyaudio.open(format=Constants.FORMAT, channels=Constants.CHANNELS,
+                            rate=Constants.SAMPLE_RATE, input=True,
+                            frames_per_buffer=Constants.CHUNK_SIZE)
+        except OSError as e:
+            self.logger.error(f"Error when opening audio stream: {e}")
+            stream = None
+            self.continue_running = False
         self.logger.debug("Stream opened")
 
         self.ready = True
@@ -38,8 +43,9 @@ class MicrophoneRecorder(Recorder, threading.Thread):
             self.queue.append((current_time, samples))
             # self.logger.info(len(self.queue))
 
-        stream.stop_stream()
-        stream.close()
+        if stream is not None:
+            stream.stop_stream()
+            stream.close()
 
         self.audio_data.put(self.queue.copy())
 
