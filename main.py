@@ -90,6 +90,7 @@ class App:
     def quit(self, signum, frame):
         self.continue_running = False
         self.trigger()
+        exit(0)
 
 
 if __name__ == "__main__":
