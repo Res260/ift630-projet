@@ -1,7 +1,13 @@
+import io
 import logging
 import threading
 
-import mouse
+try:
+    import mouse
+except io.UnsupportedOperation as e:
+    logging.getLogger('main.mouseClickTrigger').error(f"Error: {e}")
+    logging.getLogger('main.mouseClickTrigger').error(f"Make sure the mouse is plugged.")
+    exit(1)
 
 from Trigger.Trigger import Trigger
 
