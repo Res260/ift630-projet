@@ -2,12 +2,7 @@ import io
 import logging
 import threading
 
-try:
-    import mouse
-except io.UnsupportedOperation as e:
-    logging.getLogger('main.mouseClickTrigger').error(f"Error: {e}")
-    logging.getLogger('main.mouseClickTrigger').error(f"Make sure the mouse is plugged.")
-    exit(1)
+import mouse
 
 from Trigger.Trigger import Trigger
 
@@ -24,7 +19,12 @@ class MouseClickTrigger(Trigger, threading.Thread):
 
     def run(self):
         self.logger.debug("MouseClickTrigger started")
-        mouse.on_click(self.on_click)
+        try:
+            mouse.on_click(self.on_click)
+        except io.UnsupportedOperation as e:
+            self.logger.error(f"Error: {e}")
+            self.logger.error(f"Make sure the mouse is plugged.")
+            exit(1)
 
     def on_click(self):
         self.logger.debug("Mouse clicked")
