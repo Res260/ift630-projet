@@ -29,8 +29,8 @@ class MicrophoneRecorder(Recorder, threading.Thread):
                             frames_per_buffer=Constants.CHUNK_SIZE)
         except OSError as e:
             self.logger.error(f"Error when opening audio stream: {e}")
-            stream = None
-            self.continue_running = False
+            self.logger.debug("Microphone thread stopped before starting")
+            exit(1)
         self.logger.debug("Stream opened")
 
         self.ready = True
